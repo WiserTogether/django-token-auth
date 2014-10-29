@@ -5,6 +5,7 @@ import pytz
 import datetime
 import base64
 import M2Crypto
+import json
 
 from django.conf import settings
 
@@ -43,7 +44,7 @@ def get_public_key():
     return _cached_public_key
 
 
-def generate_auth_token(user, ttl, identification_field='username'):
+def generate_auth_token(user, ttl, identification_field='username', blob=dict()):
     """
         Args:
             user:
@@ -70,10 +71,11 @@ def generate_auth_token(user, ttl, identification_field='username'):
 
     # Use token name to avoid potential collisions
     # if we will use the same tokenizing mechanism for other then auth purposes
-    token_content = "{token_name}::{user_id}::{expiration_time}".format(
+    token_content = "{token_name}::{user_id}::{expiration_time}::{blob}".format(
         token_name=TOKEN_NAME,
         user_id=getattr(user, identification_field),
-        expiration_time=expiration_time.strftime("%Y-%m-%dT%H:%M:%S")
+        expiration_time=expiration_time.strftime("%Y-%m-%dT%H:%M:%S"),
+        blob=json.dumps(blob)
     )
 
     signature = private_key.sign(token_content)
@@ -117,9 +119,9 @@ def validate_auth_token(token):
         return None
 
     try:
-        token_name, user_id, expiration_time = token_content.split('::')
+        token_name, user_id, expiration_time, blob = token_content.split('::')
     except:
-        # Token must contain 3 components, otherwise it's invalid
+        # Token must contain 4 components, otherwise it's invalid
         return None
 
     if token_name != TOKEN_NAME:

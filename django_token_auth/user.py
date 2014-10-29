@@ -13,6 +13,7 @@ class TokenAuthenticatedUser(object):
     def __init__(self, username, token):
         self._token = token
         self.username = username
+        self.blob = (token.split("|",)[0]).split("::")[3]
 
     def is_authenticated(self):
         return True
