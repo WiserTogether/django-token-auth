@@ -6,6 +6,7 @@ import datetime
 import base64
 import M2Crypto
 import json
+import hashlib
 
 from django.conf import settings
 
@@ -78,7 +79,9 @@ def generate_auth_token(user, ttl, identification_field='username', blob=dict())
         blob=json.dumps(blob)
     )
 
-    signature = private_key.sign(token_content)
+    digest = hashlib.new('sha256', token_content).digest()
+
+    signature = private_key.sign(digest, algo='sha256')
 
     signed_token = "{token_content}|{signature}".format(
         token_content=token_content,
@@ -112,7 +115,8 @@ def validate_auth_token(token):
 
     public_key = get_public_key()
     try:
-        if not public_key.verify(token_content, signature):
+        digest = hashlib.new('sha256', token_content).digest()
+        if not public_key.verify(digest, signature, algo='sha256'):
             return None
     except:
         # Token is not valid!
