@@ -12,7 +12,7 @@ Each token consists of \<token_name\>::\<username\>::\<expiration_time\>|\<signa
 + **token_name** - just a string prefix that should distinguish our authentication token from any other same formated tokens
 + **username** - authenticated user identifier
 + **expiration_time** - after this time token can not be used anymore
-+ **json_blob** - dictionary serialized to json
++ **blob** - dictionary serialized to json
 + **signature** - cryptographical signature verifies that token has been issued by AC
 
 AC computes token content, encodes it in string and then uses RSA algorithm to sign the content using private key.
