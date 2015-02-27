@@ -79,7 +79,7 @@ def generate_auth_token(user, ttl, identification_field='username', blob=dict())
         blob=json.dumps(blob)
     )
 
-    digest = hashlib.new('sha256', token_content).digest()
+    digest = hashlib.new('sha256', token_content).hexdigest()
 
     signature = private_key.sign(digest, algo='sha256')
 
@@ -115,7 +115,7 @@ def validate_auth_token(token):
 
     public_key = get_public_key()
     try:
-        digest = hashlib.new('sha256', token_content).digest()
+        digest = hashlib.new('sha256', token_content).hexdigest()
         if not public_key.verify(digest, signature, algo='sha256'):
             return None
     except:
