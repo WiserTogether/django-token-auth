@@ -30,6 +30,6 @@ setup(
         'Programming Language :: Python',
         #'Framework :: Django',
     ],
-    install_requires = ["Django>=1.6.1", "pytz", "M2Crypto"],
+    install_requires = ["Django>=1.6.1", "pytz", "M2Crypto>=0.21.1"],
     tests_require = [],
 )
