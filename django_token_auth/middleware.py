@@ -10,6 +10,12 @@ class TokenAuthenticationMiddleware(object):
         Check for authorization token on each request and authenticate a user if token is valid
     """
 
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        return self.process_request(request)
+    
     def process_request(self, request):
         try:
             token = request.META['HTTP_AUTHORIZATION'].split('API-TOKEN ')[1]
