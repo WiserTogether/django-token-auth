@@ -10,7 +10,7 @@ class TokenAuthenticationMiddleware(object):
         Check for authorization token on each request and authenticate a user if token is valid
     """
 
-    def __init__(self, get_response):
+    def __init__(self, get_response=None):
         self.get_response = get_response
 
     def __call__(self, request):
