@@ -17,7 +17,7 @@ class TokenAuthenticationMiddleware(object):
         response = self.process_request(request)
         if not response:
             response = self.get_response(request)
-       return response
+        return response
     
     def process_request(self, request):
         try:
